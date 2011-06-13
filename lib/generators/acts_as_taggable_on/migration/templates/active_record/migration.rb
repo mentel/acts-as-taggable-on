@@ -1,8 +1,10 @@
 class ActsAsTaggableOnMigration < ActiveRecord::Migration
   def self.up
     create_table :tags do |t|
-      t.string :name
+      t.column :token, :string
     end
+    
+    ActsAsTaggableOn::Tag.create_translation_table! :name => :string
 
     create_table :taggings do |t|
       t.references :tag
@@ -24,5 +26,6 @@ class ActsAsTaggableOnMigration < ActiveRecord::Migration
   def self.down
     drop_table :taggings
     drop_table :tags
+    ActsAsTaggableOn::Tag.drop_translation_table!
   end
 end

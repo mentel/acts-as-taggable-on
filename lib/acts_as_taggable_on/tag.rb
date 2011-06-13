@@ -3,6 +3,8 @@ module ActsAsTaggableOn
     include ActsAsTaggableOn::ActiveRecord::Backports if ::ActiveRecord::VERSION::MAJOR < 3
   
     attr_accessible :name
+    
+    translates :name
 
     ### ASSOCIATIONS:
 
@@ -10,8 +12,8 @@ module ActsAsTaggableOn
 
     ### VALIDATIONS:
 
-    validates_presence_of :name
-    validates_uniqueness_of :name
+    validates_presence_of :token
+    validates_uniqueness_of :token
 
     ### SCOPES:
     
@@ -20,19 +22,19 @@ module ActsAsTaggableOn
     end
 
     def self.named(name)
-      where(["name #{like_operator} ?", name])
+      where(["#{self.translations_table_name}.name #{like_operator} ?", name])
     end
   
     def self.named_any(list)
-      where(list.map { |tag| sanitize_sql(["name #{like_operator} ?", tag.to_s]) }.join(" OR "))
+      where(list.map { |tag| sanitize_sql(["#{self.translations_table_name}.name #{like_operator} ?", tag.to_s]) }.join(" OR "))
     end
   
     def self.named_like(name)
-      where(["name #{like_operator} ?", "%#{name}%"])
+      where(["#{self.translations_table_name}.name #{like_operator} ?", "%#{name}%"])
     end
 
     def self.named_like_any(list)
-      where(list.map { |tag| sanitize_sql(["name #{like_operator} ?", "%#{tag.to_s}%"]) }.join(" OR "))
+      where(list.map { |tag| sanitize_sql(["#{self.translations_table_name}.name #{like_operator} ?", "%#{tag.to_s}%"]) }.join(" OR "))
     end
 
     ### CLASS METHODS:
