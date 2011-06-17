@@ -5,6 +5,8 @@ module ActsAsTaggableOn
     attr_accessible :name
     
     translates :name
+    
+    default_scope joins(ActsAsTaggableOn::Tag::translations_table_name)
 
     ### ASSOCIATIONS:
 
